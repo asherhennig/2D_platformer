@@ -14,11 +14,16 @@ public class SoyBoyController : MonoBehaviour
     public float jumpSpeed = 8f;
 
     public float jumpDurationThreshold = 0.25f;
-    private float jumpDuration;
+
+    public float airAccel = 3f;
+
+    public float jump = 14f;
 
     private float rayCastLengthCheck = 0.005f;
     private float width;
     private float height;
+
+    private float jumpDuration;
 
     private Vector2 input;
     private SpriteRenderer sr;
@@ -66,6 +71,60 @@ public class SoyBoyController : MonoBehaviour
         }
     }
 
+    public bool IsWallToLeftOrRight()
+    {
+        //1
+        bool wallOnLeft = Physics2D.Raycast(new Vector2(
+            transform.position.x - width, transform.position.y),
+            -Vector2.right, rayCastLengthCheck);
+        bool wallOnRight = Physics2D.Raycast(new Vector2(
+            transform.position.x + width, transform.position.y),
+            Vector2.right, rayCastLengthCheck);
+        //2
+        if (wallOnLeft || wallOnRight)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool PlayerIsTouchingGroundOrWall()
+    {
+        if (PlayerIsOnGround() || IsWallToLeftOrRight())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int GetWallDirection()
+    {
+        bool isWallLeft = Physics2D.Raycast(new Vector2(
+            transform.position.x + width, transform.position.y),
+            -Vector2.right, rayCastLengthCheck);
+        bool isWallRight = Physics2D.Raycast(new Vector2(
+            transform.position.x - width, transform.position.y),
+            Vector2.right, rayCastLengthCheck);
+        if (isWallLeft)
+        {
+            return -1;
+        }
+        else if (isWallRight)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -106,11 +165,19 @@ public class SoyBoyController : MonoBehaviour
     void FixedUpdate()
     {
         //1
-        var acceleration = accel;
+        var acceleration = 0f;
+        if (PlayerIsOnGround())
+        {
+            acceleration = accel;
+        }
+        else
+        {
+            acceleration = airAccel;
+        }
         var xVelocity = 0f;
 
         //2
-        if (input.x == 0)
+        if (PlayerIsOnGround() && input.x == 0)
         {
             xVelocity = 0f;
         }
@@ -118,10 +185,21 @@ public class SoyBoyController : MonoBehaviour
         {
             xVelocity = rb.velocity.x;
         }
+
+        var yVelocity = 0f;
+        if (PlayerIsTouchingGroundOrWall() && input.y == 1)
+        {
+            yVelocity = jump;
+        }
+        else
+        {
+            yVelocity = rb.velocity.y;
+        }
+
         //3
         rb.AddForce(new Vector2(((input.x * speed) - rb.velocity.x) * acceleration, 0));
         //4
-        rb.velocity = new Vector2(xVelocity, rb.velocity.y);
+        rb.velocity = new Vector2(xVelocity, yVelocity);
 
         if (isJumping && jumpDuration < jumpDurationThreshold)
         {
