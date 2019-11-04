@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1169408040053174084}
   - component: {fileID: 1169408040053174091}
   - component: {fileID: 5741460888733386397}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SoyBoy
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,8 +123,8 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!95 &1169408040053174091
 Animator:
   serializedVersion: 3
