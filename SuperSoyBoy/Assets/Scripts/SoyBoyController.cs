@@ -201,6 +201,13 @@ public class SoyBoyController : MonoBehaviour
         //4
         rb.velocity = new Vector2(xVelocity, yVelocity);
 
+        if (IsWallToLeftOrRight() && !PlayerIsOnGround()
+            && input.y == 1)
+        {
+            rb.velocity = new Vector2(-GetWallDirection()
+                * speed * 0.75f, rb.velocity.y);
+        }
+
         if (isJumping && jumpDuration < jumpDurationThreshold)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
