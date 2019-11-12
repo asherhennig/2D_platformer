@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7524947160716223321}
   - component: {fileID: 143389429710096929}
   - component: {fileID: 6979824864569863865}
+  - component: {fileID: 8288539081148891332}
   m_Layer: 0
   m_Name: buzzsaw
   m_TagString: Untagged
@@ -232,3 +233,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8288539081148891332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7524947160716223320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5b510cda30e794fa177ee8d4af6656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationsPerMinute: 640

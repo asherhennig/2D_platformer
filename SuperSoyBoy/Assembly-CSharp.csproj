@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraLerpToTransform.cs" />
     <Compile Include="Assets\Scripts\Hazard.cs" />
+    <Compile Include="Assets\Scripts\RotationScript.cs" />
     <Compile Include="Assets\Scripts\SoyBoyController.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/asher/OneDrive/Desktop/Lab-3_2D_plat.5/SuperSoyBoy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
