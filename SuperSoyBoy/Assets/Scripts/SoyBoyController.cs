@@ -149,6 +149,7 @@ public class SoyBoyController : MonoBehaviour
             {
                 isJumping = true;
             }
+
             animator.SetBool("IsOnWall", false);
         }
 
