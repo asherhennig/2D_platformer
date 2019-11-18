@@ -30,9 +30,9 @@ public class PlayerName : MonoBehaviour
         GameManager.instance.playerName = playerName;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    //// Update is called once per frame
+    //void Update()
+    //{
         
-    }
+    //}
 }
