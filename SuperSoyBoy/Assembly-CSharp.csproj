@@ -61,9 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraLerpToTransform.cs" />
+    <Compile Include="Assets\Scripts\CameraSettingsRepresentation.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Goal.cs" />
     <Compile Include="Assets\Scripts\Hazard.cs" />
+    <Compile Include="Assets\Scripts\Level.cs" />
+    <Compile Include="Assets\Scripts\LevelDataRepresentation.cs" />
+    <Compile Include="Assets\Scripts\LevelItemRepresentation.cs" />
     <Compile Include="Assets\Scripts\PlayerName.cs" />
     <Compile Include="Assets\Scripts\PlayerTimeEntry.cs" />
     <Compile Include="Assets\Scripts\RotationScript.cs" />

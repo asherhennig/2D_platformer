@@ -7,10 +7,12 @@ public class CameraLerpToTransform : MonoBehaviour
     //1
     public Transform camTarget;
     public float trackingSpeed;
+    public float cameraZDepth;
     public float minX;
     public float minY;
     public float maxX;
     public float maxY;
+
 
     //2
     void FixedUpdate()
