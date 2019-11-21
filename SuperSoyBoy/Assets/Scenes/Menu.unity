@@ -1385,6 +1385,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: 
+  buttonPrefab: {fileID: 1000013739473350, guid: ff128abf516887f4da194a0569d45514,
+    type: 3}
+  selectedLevel: 
 --- !u!4 &2130246526
 Transform:
   m_ObjectHideFlags: 0

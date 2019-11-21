@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
+    public GameObject buttonPrefab;
+    public string selectedLevel;
+
     void Awake()
     {
         if (instance == null)
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        DiscoverLevels();
     }
 
     // Update is called once per frame
@@ -112,9 +116,133 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadsceneMode)
     {
-        if (scene.name == "Game")
+        if (!string.IsNullOrEmpty(selectedLevel)
+            && scene.name == "Game")
         {
+            Debug.Log("Loading level content for: " + selectedLevel);
+            LoadLevelContent();
             DisplayPreviousTimes();
         }
+        if (scene.name == "Menu")
+        {
+            DiscoverLevels();
+        }
+    }
+
+    private void SetLevelName(string levelFilePath)
+    {
+        selectedLevel = levelFilePath;
+        SceneManager.LoadScene("Game");
+    }
+
+    private void DiscoverLevels()
+    {
+        var levelPanelRectTransform =
+            GameObject.Find("LevelItemsPanel")
+            .GetComponent<RectTransform>();
+        var levelFiles = Directory.GetFiles(Application.dataPath,
+            "*.json");
+
+        var yOffset = 0f;
+        for (var i = 0; i < levelFiles.Length; i++)
+        {
+            if (i == 0)
+            {
+                yOffset = -30f;
+            }
+            else
+            {
+                yOffset -= 65f;
+            }
+            var levelFile = levelFiles[i];
+            var levelName = Path.GetFileName(levelFile);
+
+            //1
+            var levelButtonObj = (GameObject)Instantiate(buttonPrefab,
+                Vector2.zero, Quaternion.identity);
+            //2
+            var levelButtonRectTransform = levelButtonObj
+                .GetComponent<RectTransform>();
+            levelButtonRectTransform.SetParent(levelPanelRectTransform,
+                true);
+            //3
+            levelButtonRectTransform.anchoredPosition = 
+                new Vector2(212.5f, yOffset);
+            //4
+            var levelButtonText = levelButtonObj.transform.GetChild(0)
+                .GetComponent<Text>();
+            levelButtonText.text = levelName;
+
+            var levelButton = levelButtonObj.GetComponent<Button>();
+            levelButton.onClick.AddListener(
+                delegate { SetLevelName(levelFile); });
+            levelPanelRectTransform.sizeDelta =
+                new Vector2(levelPanelRectTransform.sizeDelta.x, 60f * i);
+        }
+        levelPanelRectTransform.offsetMax =
+            new Vector2(levelPanelRectTransform.offsetMax.x, 0f);
+    }
+
+    private void LoadLevelContent()
+    {
+        var existingLevelRoot = GameObject.Find("Level");
+        Destroy(existingLevelRoot);
+        var levelRoot = new GameObject("Level");
+
+        //1
+        var levelFileJsonContent = File.ReadAllText(selectedLevel);
+        var levelData = JsonUtility.FromJson<LevelDataRepresentation>(
+            levelFileJsonContent);
+        //2
+        foreach (var li in levelData.levelItems)
+        {
+            //3
+            var pieceResource =
+                Resources.Load("Prefabs/" + li.prefabName);
+            if (pieceResource == null)
+            {
+                Debug.LogError("Cannot find resource: " + li.prefabName);
+            }
+            //4
+            var piece = (GameObject)Instantiate(pieceResource,
+                li.position, Quaternion.identity);
+            var pieceSprite = piece.GetComponent<SpriteRenderer>();
+            if (pieceSprite != null)
+            {
+                pieceSprite.sortingOrder = li.spriteOrder;
+                pieceSprite.sortingLayerName = li.spriteLayer;
+                pieceSprite.color = li.spriteColor;
+            }
+            //5
+            piece.transform.parent = levelRoot.transform;
+            piece.transform.position = li.position;
+            piece.transform.rotation = Quaternion.Euler(
+                li.rotation.x, li.rotation.y, li.rotation.z);
+            piece.transform.localScale = li.scale;
+        }
+
+        var SoyBoy = GameObject.Find("SoyBoy");
+        SoyBoy.transform.position = levelData.playerStartPosition;
+        Camera.main.transform.position = new Vector3(
+            SoyBoy.transform.position.x, SoyBoy.transform.position.y,
+            Camera.main.transform.position.z);
+
+        //1
+        var camSettings = FindObjectOfType<CameraLerpToTransform>();
+        //2
+        if (camSettings != null)
+        {
+            camSettings.cameraZDepth =
+                levelData.cameraSettings.cameraZDepth;
+            camSettings.camTarget = GameObject.Find(
+                levelData.cameraSettings.cameraTrackTarget).transform;
+            camSettings.maxX = levelData.cameraSettings.maxX;
+            camSettings.maxY = levelData.cameraSettings.maxY;
+            camSettings.minX = levelData.cameraSettings.minX;
+            camSettings.minY = levelData.cameraSettings.minY;
+            camSettings.trackingSpeed =
+                levelData.cameraSettings.trackingSpeed;
+        }
+
     }
 }
